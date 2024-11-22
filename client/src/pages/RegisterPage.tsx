@@ -19,9 +19,9 @@ function RegisterPage() {
             setLoding(true)
             const res = await simple_post('/register', {username, email, password})
             const data = await res.json()
-            console.log(data)
+            // console.log(data)
             setLoding(false)
-            if(res.status === 200) {
+            if(res.ok) {
                 navigate('/')
             } else {
                 if (data.problem) {

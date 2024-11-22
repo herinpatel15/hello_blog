@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { routes } from "../router";
-import { encrypt } from "../utiles/hashPass";
+import { decrypt, encrypt } from "../utiles/hashPass";
 import { UserModel } from "../utiles/dbModel";
+import { jwt_sign } from "../utiles/jwtToken";
 
 export const register = async (req: Request, res: Response) => {
     try {
@@ -20,47 +21,63 @@ export const register = async (req: Request, res: Response) => {
                     email,
                     password: hashPassword
                 })
-
+                const token = jwt_sign({username: user.username!, id: user._id.toString()})
                 // success response
-                console.log(user);
                 res
-                    .status(routes.login.succsessCode)
-                    .json(user)
+                    .cookie('token', token)
+                    .json('ok')
             } else {
                 // error response
-                res.status(routes.login.errorCode).json({ message: 'Username already exists', problem: 'email' })
+                res.status(500).json({ message: 'Username already exists', problem: 'email' })
             }
         } else {
             // error response
-            res.status(routes.login.errorCode).json({ message: 'Username already exists', problem: 'username' })
+            res.status(500).json({ message: 'Username already exists', problem: 'username' })
         }
     } catch (err) {
         console.error(err);
 
         res
-            .status(routes.register.errorCode)
+            .status(500)
             .json({ error: 'internal server error' })
     }
 }
 
-export const login = (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
     try {
         // get data
         const { username, password } = req.body
         console.log({ username, password });
 
         // main logic here
+        const checkUsername = await UserModel.findOne({username})
+        if(!checkUsername) {
+            // error response
+            res
+                .status(500)
+                .json({ message: 'Username does not exist', problem: 'username'})
+        } else {
+            const unhashPassword = decrypt(checkUsername.password!)
+            if(unhashPassword !== password) {
+                // error response
+                res
+                    .status(500)
+                    .json({ message: 'Invalid password', problem: 'password' })
+            } else {
+                const token = jwt_sign({username: checkUsername.username!, id: checkUsername._id.toString()})
+                
+                // success response
+                res
+                    .cookie('token', token)
+                    .json('ok')
+            }
 
-
-        // response
-        res
-            .status(routes.login.succsessCode)
-            .json({ username, password })
+        }
     } catch (err) {
         console.error(err);
 
         res
-            .status(routes.login.errorCode)
+            .status(500)
             .json({ error: 'internal server error' })
     }
 }

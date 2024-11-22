@@ -7,25 +7,28 @@ function LoginPage() {
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
     const [loading, setLoading] = React.useState(false)
+    const [error, setError] = React.useState('')
 
     const navigate = useNavigate()
 
-    const handalLogin = React.useCallback(async (e: FormEvent) => {
+    const handleLogin = React.useCallback(async (e: FormEvent) => {
         e.preventDefault()
         try {
             setLoading(true)
             const res = await simple_post('/login', { username, password })
             const data = await res.json()
-            console.log(data)
+            // console.log(data)
             setLoading(false)
 
-            if (res.status === 200) {
+            if (res.ok) {
                 navigate('/')
             } else {
-                alert('Invalid username or password')
+                // alert('Invalid username or password')
+                setError(data.problem)
             }
         } catch (err) {
-            alert('Login failed')
+            // alert('Login failed')
+            setError('both')
             console.error(err)
         }
     }, [username, password, setLoading, simple_post, navigate])
@@ -36,7 +39,7 @@ function LoginPage() {
                 <h2 className='text-center mb-10 text-2xl font-semibold '>LogIn</h2>
                 <form 
                     className='flex flex-col w-full'
-                    onSubmit={handalLogin}
+                    onSubmit={handleLogin}
                 >
                     <input 
                         className='p-2 rounded-xl border-2 border-black mb-3' 
@@ -64,6 +67,17 @@ function LoginPage() {
                         }
                     </button>
                 </form>
+                <p className="text-red-500">
+                    {
+                        error === 'both' ? 'Somthing wents Wrong!!' : ''
+                    }
+                    {
+                        error === 'username' ? 'Invalid username' : ''
+                    }
+                    {
+                        error === 'password' ? 'Invalid password' : ''
+                    }
+                </p>
                 <Link to='/register'><p className='text-center pr-5 py-5'>Create new account!!</p></Link>
             </div>
         </main>

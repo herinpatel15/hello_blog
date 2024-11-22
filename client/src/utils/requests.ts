@@ -6,7 +6,8 @@ export const simple_post = async (route: string, data: postData): Promise<Respon
     const response = await fetch(import.meta.env.VITE_API_BASE_URL+route, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        credentials: 'include'
     })
     return response;
 }
