@@ -1,19 +1,10 @@
-import { Request, Response, Router } from "express";
+import { Router } from "express";
 import { routes } from "../router";
+import { login, register } from "../controller/authController";
 
 const router = Router()
 
-router.get(routes.login.path, (req: Request, res: Response) => {
-    try {
-        res
-        .status(routes.login.succsessCode)
-        .json({massage: "ohk herin"})
-    } catch (err) {
-        console.error(err);
-        res
-        .status(routes.login.errorCodes)
-        .json({error: 'internal server error'})
-    }
-})
+router.post(routes.login.path, login)
+router.post(routes.register.path, register)
 
 export default router
