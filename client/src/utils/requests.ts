@@ -11,3 +11,10 @@ export const simple_post = async (route: string, data: postData): Promise<Respon
     })
     return response;
 }
+
+export const simpal_get = async (route: string): Promise<Response> => {
+    const response = await fetch(import.meta.env.VITE_API_BASE_URL+route, {
+        credentials: 'include'
+    })
+    return response
+}
