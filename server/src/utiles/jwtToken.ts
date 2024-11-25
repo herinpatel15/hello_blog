@@ -24,3 +24,14 @@ export function jwt_sign(userData: UserData) {
         
     }
 }
+
+export function jwt_verify(token: string) {
+    try {
+        const data = jwt.verify(token, process.env.JWT_KEY!)
+        return data
+    } catch (err) {
+        console.log(err);
+        throw new Error('jwt verify error')
+        
+    }
+}

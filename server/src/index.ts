@@ -2,6 +2,7 @@ import express from 'express'
 import { config } from 'dotenv'
 import cors from 'cors'
 import authRouter from './routes/authRouter'
+import userRouter from './routes/userRouter'
 import { dbConnection } from './utiles/dbConnection'
 import coockieParser from 'cookie-parser'
 
@@ -27,5 +28,6 @@ if (!dbConnectionData) {
 
 // All router
 app.use('/api/v1', authRouter)
+app.use('/api/v1', userRouter)
 
 app.listen(port, () => console.log('server run on port : ' + port))
