@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { Request, Response } from 'express'
 import { config } from 'dotenv'
 import cors from 'cors'
 import authRouter from './routes/authRouter'
@@ -29,5 +29,9 @@ if (!dbConnectionData) {
 // All router
 app.use('/api/v1', authRouter)
 app.use('/api/v1', userRouter)
+
+app.get('/', (req: Request, res: Response) => {
+    res.json({msg: "hello herin"})
+})
 
 app.listen(port, () => console.log('server run on port : ' + port))
