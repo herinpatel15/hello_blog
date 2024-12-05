@@ -47,7 +47,7 @@ export const login = async (req: Request, res: Response) => {
     try {
         // get data
         const { username, password } = req.body
-        console.log({ username, password });
+        // console.log({ username, password });
 
         // main logic here
         const checkUsername = await UserModel.findOne({username})
