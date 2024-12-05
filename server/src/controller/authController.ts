@@ -81,3 +81,19 @@ export const login = async (req: Request, res: Response) => {
             .json({ error: 'internal server error' })
     }
 }
+
+export const logout = async (req: Request, res: Response) => {
+    try {
+        const {token} = req.cookies
+        if(token) {
+            res
+            .clearCookie('token')
+            .json('ok')
+        }
+    } catch (err) {
+        console.error(err)
+        res
+         .status(500)
+         .json({error: 'internalserver error'})
+    }
+}
