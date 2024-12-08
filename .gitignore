@@ -15,6 +15,10 @@ client/dist-ssr
 server/node_modules
 server/dist
 
+prototype/node_modules
+prototype/dist
+prototype/google_credentials.json
+
 .env
 
 # Editor directories and files
